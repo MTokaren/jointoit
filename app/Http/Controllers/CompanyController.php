@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CompanyCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CompanyStoreRequest;
 use App\Http\Requests\CompanyUpdateRequest;
@@ -39,7 +40,8 @@ class CompanyController extends Controller
             $validated['logo'] = $logoPath;
         }
 
-        Company::create($validated);
+        $company = Company::create($validated);
+        event(new CompanyCreated($company));
 
         return redirect()->back()->with('success', 'Company created successfully.');
     }
