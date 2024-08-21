@@ -1,8 +1,11 @@
 @extends('adminlte::page')
 
+@vite('resources/js/datatable.js')
+
 @section('content')
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css">
     <a href="{{route('companies.create')}}" type="button" class="btn btn-success">Create</a>
-    <table class="table">
+    <table class="table datatable">
         <thead>
             <tr>
                 <th>ID</th>
@@ -37,8 +40,4 @@
             @endforeach
         </tbody>
     </table>
-
-    <div class="d-flex justify-content-center fs-6">
-        {{ $companies->links() }}
-    </div>
 @endsection
