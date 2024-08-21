@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CompanyStoreRequest;
+use App\Http\Requests\CompanyUpdateRequest;
+use App\Models\Company;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -12,7 +15,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::simplePaginate(10);
+        return view('company.index', compact('companies'));
     }
 
     /**
@@ -20,15 +24,24 @@ class CompanyController extends Controller
      */
     public function create()
     {
-        //
+        return view('company.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CompanyStoreRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
+
+        Company::create($validated);
+
+        return redirect()->back()->with('success', 'Company created successfully.');
     }
 
     /**
@@ -36,7 +49,6 @@ class CompanyController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -44,15 +56,26 @@ class CompanyController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $company = Company::findOrFail($id);
+        return view('company.edit', compact('company'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CompanyUpdateRequest $request, string $id)
     {
-        //
+        $company = Company::findOrFail($id);
+        $validated = $request->validated();
+
+        if ($request->hasFile('logo')) {
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            $validated['logo'] = $logoPath;
+        }
+
+        $company->update($validated);
+
+        return redirect()->route('companies.index')->with('success', 'Company created successfully.');
     }
 
     /**
@@ -60,6 +83,8 @@ class CompanyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $company = Company::findOrFail($id);
+        $company->delete();
+        return redirect()->route('companies.index');
     }
 }

@@ -324,6 +324,16 @@ return [
         ],
         ['header' => 'account_settings'],
         [
+            'text' => 'Companies',
+            'url' => 'companies',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
+            'text' => 'Employees',
+            'url' => 'employees',
+            'icon' => 'fas fa-fw fa-user',
+        ],
+        [
             'text' => 'profile',
             'url' => 'admin/settings',
             'icon' => 'fas fa-fw fa-user',
